@@ -1,0 +1,219 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+-include ../makefile.local
+
+# Add inputs and outputs from these tool invocations to the build variables 
+C_SRCS_QUOTED += \
+"../Sources/BoardSupport.c" \
+"../Sources/ColorSensors.c" \
+"../Sources/GeneralFunctions.c" \
+"../Sources/Motor.c" \
+"../Sources/PTM0.c" \
+"../Sources/Pit.c" \
+"../Sources/ServoMotor.c" \
+"../Sources/UART.c" \
+"../Sources/UltraSonic.c" \
+"../Sources/arm_cm0.c" \
+"../Sources/main.c" \
+"../Sources/mcg.c" \
+"../Sources/sa_mtb.c" \
+
+C_SRCS += \
+../Sources/BoardSupport.c \
+../Sources/ColorSensors.c \
+../Sources/GeneralFunctions.c \
+../Sources/Motor.c \
+../Sources/PTM0.c \
+../Sources/Pit.c \
+../Sources/ServoMotor.c \
+../Sources/UART.c \
+../Sources/UltraSonic.c \
+../Sources/arm_cm0.c \
+../Sources/main.c \
+../Sources/mcg.c \
+../Sources/sa_mtb.c \
+
+OBJS += \
+./Sources/BoardSupport.o \
+./Sources/ColorSensors.o \
+./Sources/GeneralFunctions.o \
+./Sources/Motor.o \
+./Sources/PTM0.o \
+./Sources/Pit.o \
+./Sources/ServoMotor.o \
+./Sources/UART.o \
+./Sources/UltraSonic.o \
+./Sources/arm_cm0.o \
+./Sources/main.o \
+./Sources/mcg.o \
+./Sources/sa_mtb.o \
+
+C_DEPS += \
+./Sources/BoardSupport.d \
+./Sources/ColorSensors.d \
+./Sources/GeneralFunctions.d \
+./Sources/Motor.d \
+./Sources/PTM0.d \
+./Sources/Pit.d \
+./Sources/ServoMotor.d \
+./Sources/UART.d \
+./Sources/UltraSonic.d \
+./Sources/arm_cm0.d \
+./Sources/main.d \
+./Sources/mcg.d \
+./Sources/sa_mtb.d \
+
+OBJS_QUOTED += \
+"./Sources/BoardSupport.o" \
+"./Sources/ColorSensors.o" \
+"./Sources/GeneralFunctions.o" \
+"./Sources/Motor.o" \
+"./Sources/PTM0.o" \
+"./Sources/Pit.o" \
+"./Sources/ServoMotor.o" \
+"./Sources/UART.o" \
+"./Sources/UltraSonic.o" \
+"./Sources/arm_cm0.o" \
+"./Sources/main.o" \
+"./Sources/mcg.o" \
+"./Sources/sa_mtb.o" \
+
+C_DEPS_QUOTED += \
+"./Sources/BoardSupport.d" \
+"./Sources/ColorSensors.d" \
+"./Sources/GeneralFunctions.d" \
+"./Sources/Motor.d" \
+"./Sources/PTM0.d" \
+"./Sources/Pit.d" \
+"./Sources/ServoMotor.d" \
+"./Sources/UART.d" \
+"./Sources/UltraSonic.d" \
+"./Sources/arm_cm0.d" \
+"./Sources/main.d" \
+"./Sources/mcg.d" \
+"./Sources/sa_mtb.d" \
+
+OBJS_OS_FORMAT += \
+./Sources/BoardSupport.o \
+./Sources/ColorSensors.o \
+./Sources/GeneralFunctions.o \
+./Sources/Motor.o \
+./Sources/PTM0.o \
+./Sources/Pit.o \
+./Sources/ServoMotor.o \
+./Sources/UART.o \
+./Sources/UltraSonic.o \
+./Sources/arm_cm0.o \
+./Sources/main.o \
+./Sources/mcg.o \
+./Sources/sa_mtb.o \
+
+
+# Each subdirectory must supply rules for building sources it contributes
+Sources/BoardSupport.o: ../Sources/BoardSupport.c
+	@echo 'Building file: $<'
+	@echo 'Executing target #1 $<'
+	@echo 'Invoking: ARM Ltd Windows GCC C Compiler'
+	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc" "$<" @"Sources/BoardSupport.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/BoardSupport.o"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+Sources/ColorSensors.o: ../Sources/ColorSensors.c
+	@echo 'Building file: $<'
+	@echo 'Executing target #2 $<'
+	@echo 'Invoking: ARM Ltd Windows GCC C Compiler'
+	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc" "$<" @"Sources/ColorSensors.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/ColorSensors.o"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+Sources/GeneralFunctions.o: ../Sources/GeneralFunctions.c
+	@echo 'Building file: $<'
+	@echo 'Executing target #3 $<'
+	@echo 'Invoking: ARM Ltd Windows GCC C Compiler'
+	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc" "$<" @"Sources/GeneralFunctions.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/GeneralFunctions.o"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+Sources/Motor.o: ../Sources/Motor.c
+	@echo 'Building file: $<'
+	@echo 'Executing target #4 $<'
+	@echo 'Invoking: ARM Ltd Windows GCC C Compiler'
+	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc" "$<" @"Sources/Motor.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/Motor.o"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+Sources/PTM0.o: ../Sources/PTM0.c
+	@echo 'Building file: $<'
+	@echo 'Executing target #5 $<'
+	@echo 'Invoking: ARM Ltd Windows GCC C Compiler'
+	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc" "$<" @"Sources/PTM0.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/PTM0.o"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+Sources/Pit.o: ../Sources/Pit.c
+	@echo 'Building file: $<'
+	@echo 'Executing target #6 $<'
+	@echo 'Invoking: ARM Ltd Windows GCC C Compiler'
+	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc" "$<" @"Sources/Pit.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/Pit.o"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+Sources/ServoMotor.o: ../Sources/ServoMotor.c
+	@echo 'Building file: $<'
+	@echo 'Executing target #7 $<'
+	@echo 'Invoking: ARM Ltd Windows GCC C Compiler'
+	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc" "$<" @"Sources/ServoMotor.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/ServoMotor.o"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+Sources/UART.o: ../Sources/UART.c
+	@echo 'Building file: $<'
+	@echo 'Executing target #8 $<'
+	@echo 'Invoking: ARM Ltd Windows GCC C Compiler'
+	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc" "$<" @"Sources/UART.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/UART.o"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+Sources/UltraSonic.o: ../Sources/UltraSonic.c
+	@echo 'Building file: $<'
+	@echo 'Executing target #9 $<'
+	@echo 'Invoking: ARM Ltd Windows GCC C Compiler'
+	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc" "$<" @"Sources/UltraSonic.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/UltraSonic.o"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+Sources/arm_cm0.o: ../Sources/arm_cm0.c
+	@echo 'Building file: $<'
+	@echo 'Executing target #10 $<'
+	@echo 'Invoking: ARM Ltd Windows GCC C Compiler'
+	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc" "$<" @"Sources/arm_cm0.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/arm_cm0.o"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+Sources/main.o: ../Sources/main.c
+	@echo 'Building file: $<'
+	@echo 'Executing target #11 $<'
+	@echo 'Invoking: ARM Ltd Windows GCC C Compiler'
+	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc" "$<" @"Sources/main.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/main.o"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+Sources/mcg.o: ../Sources/mcg.c
+	@echo 'Building file: $<'
+	@echo 'Executing target #12 $<'
+	@echo 'Invoking: ARM Ltd Windows GCC C Compiler'
+	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc" "$<" @"Sources/mcg.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/mcg.o"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+Sources/sa_mtb.o: ../Sources/sa_mtb.c
+	@echo 'Building file: $<'
+	@echo 'Executing target #13 $<'
+	@echo 'Invoking: ARM Ltd Windows GCC C Compiler'
+	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc" "$<" @"Sources/sa_mtb.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/sa_mtb.o"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+

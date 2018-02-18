@@ -1,0 +1,358 @@
+/*
+ * Motor.c
+ *
+ *  Created on: May 24, 2017
+ *      Author: aviranh
+ */
+
+#include "TFC.h"
+#include "mcg.h"
+
+static unsigned int MaxDutyCycle = 0x493a;
+
+extern int TPM0SampleChoose;
+extern int CH2status;
+extern int CH3status;
+
+extern int LeftSonicMinDistance;
+extern int LeftSonicMaxDistance;
+extern int RightSonicMinDistance;
+extern int RightSonicMaxDistance;
+extern int RightWantedSpeed=0;
+extern int LeftWantedSpeed=0;
+extern short EncoderCheck=0;
+extern int LeftEncoderCounter; // Encoder Counter for Clicks
+extern int RightEncoderCounter; // Encoder Counter for Clicks
+
+extern short StraightDrive;
+
+void motorconfig()
+{
+//___________________________________	
+// MOTOR 1 CONFIG
+//___________________________________
+
+	//initTPM2_CH1
+
+	TPM2_SC = 0; // to ensure that the counter is not running
+	TPM2_SC |= TPM_SC_PS(7); //Prescaler =5, up-mode, counter-disable
+	TPM2_MOD = 0x493E; // PWM frequency of 40Hz
+	TPM2_C1SC |= TPM_CnSC_MSB_MASK + TPM_CnSC_ELSB_MASK;
+	TPM2_C1V = 0; // stop motor DS=0
+	TPM2_CONF = 0;
+	
+	
+	//PTE23 - TPM2_CH1
+	PORTE_PCR23 = PORT_PCR_MUX(3); // Assign PTE23 pin TPM2_CH1 - ALT3
+	
+	//init PTC5 PTC6
+	//GPIO Configuration - M_IN_P M_IN_N
+	PORTC_PCR5 = PORT_PCR_MUX(1); // assign PTC5 as GPIO
+	PORTC_PCR6 = PORT_PCR_MUX(1); // assign PTC6 as GPIO
+	GPIOC_PDDR |= PORT_LOC(5); // set as output
+	GPIOC_PDDR |= PORT_LOC(6); // set as output
+	GPIOC_PDOR = 0x00; // PTC5=0 PTC6=0
+	GPIOC_PCOR |= PORT_LOC(5) + PORT_LOC(6) ; 
+
+	TPM2_SC |= TPM_SC_CMOD(1); //Start the TPM2 counter
+	
+	
+//___________________________________	
+// MOTOR 2 CONFIG
+//___________________________________
+	//initTPM1_CH0
+	TPM1_C0SC |= TPM_CnSC_MSB_MASK + TPM_CnSC_ELSB_MASK ;
+	TPM1_C0V = 0; // stop motor DS=0
+
+	//PTE20 - TPM1_CH0
+	PORTE_PCR20 = PORT_PCR_MUX(3); // Assign PTE23 pin TPM2_CH1 - ALT3
+	
+	//init PTC5 PTC6
+	//GPIO Configuration - M_IN_P M_IN_N
+	PORTC_PCR7 = PORT_PCR_MUX(1); // assign PTC5 as GPIO
+	PORTC_PCR10 = PORT_PCR_MUX(1); // assign PTC6 as GPIO
+	GPIOC_PDDR |= PORT_LOC(7); // set as output
+	GPIOC_PDDR |= PORT_LOC(10); // set as output
+	GPIOC_PCOR |= PORT_LOC(7) + PORT_LOC(10); 
+
+	TPM1_SC |= TPM_SC_CMOD(1); //Start the TPM2 counter
+	
+}
+
+
+void EncodersConfig (){
+//___________________________________	
+// MOTOR 1 and 2 CONFIG
+//___________________________________
+	
+	TPM0_SC = 0; // to ensure that the counter is not running
+	TPM0_C2SC = 0;
+	TPM0_C2SC |= TPM_CnSC_ELSA_MASK; // Rising edge
+	TPM0_C3SC |= TPM_CnSC_ELSA_MASK; //Rising edge
+	TPM0_CONF = 0;
+	TPM0_SC |= TPM_SC_CMOD(0) ;	
+	
+	//GPIO Configuration - Encoder - Input
+	PORTC_PCR3 = PORT_PCR_MUX(0); //Input Capture DISABLE PTC3
+	PORTC_PCR4 = PORT_PCR_MUX(0); //Input Capture DISABLE PTC4
+	TPM0_STATUS |= 0x0006;	//clear interrupt flag
+}
+//___________________________________	
+//  motor_DirSpeed
+//___________________________________
+void motor_DirSpeed(int Left, int Right)
+ {
+	//StraightDrive=0;
+	GPIOC_PCOR |= PORT_LOC(5); // start port 5	
+	GPIOC_PCOR |= PORT_LOC(7); // start port 5	  
+	GPIOC_PSOR |= PORT_LOC(6); // start port 7
+	GPIOC_PSOR |= PORT_LOC(10); // start port 5
+
+	if (Left==0 && Right==0){
+		  TPM2_C1V = 0; // change speed
+		  TPM1_C0V = 0;
+	}else{
+	  TPM2_C1V = ((0x493a/10)*Right); // change speed
+	  TPM1_C0V = (0x493a/10)*Left + 250;// change speed
+
+	  PORTC_PCR3 = PORT_PCR_MUX(4); //Input Capture PTC3
+	  initTPM0forEncoders();
+
+	  TPM0_SC |= TPM_SC_CMOD(1); // Start counter
+	  TPM0_STATUS |= 0xFFFF;
+	  TPM0_C2SC |= TPM_CnSC_CHIE_MASK;// enable TPM0 ch2 interrupt RIGHT WHEEL
+
+	}
+    RightWantedSpeed=Right;
+	LeftWantedSpeed=Left;
+	}
+ 
+void DriveBack(int LeftSpeed, int RightSpeed){
+	GPIOC_PSOR |= PORT_LOC(5); // start port 5	
+	GPIOC_PSOR |= PORT_LOC(7); // start port 5	  
+	GPIOC_PCOR |= PORT_LOC(6); // start port 7
+	GPIOC_PCOR |= PORT_LOC(10); // start port 5
+
+	  TPM2_C1V = (0x493a/10)*RightSpeed - 0x493a/20; // change speed
+	  TPM1_C0V = (0x493a/10)*LeftSpeed; // change speed
+}
+   
+
+
+//___________________________________	
+//  EncodersSensing(){
+//___________________________________
+void EncodersSensing(){
+   
+	PORTC_PCR3 = PORT_PCR_MUX(4); //Input Capture PTC3
+	
+    PORTC_PCR4 = PORT_PCR_MUX(4); //Input Capture PTC4
+
+	
+	TPM0SampleChoose=2;
+	initTPM0forEncoders();
+	CH2status=0;
+	CH3status=3;
+	
+	TPM0_SC |= TPM_SC_CMOD(1) + TPM_SC_TOIE_MASK ; // Start counter and TOIE
+	TPM0_STATUS |= 0xFFFF;
+	TPM0_C2SC |= TPM_CnSC_CHIE_MASK;// enable TPM0 ch2 interrupt
+	//TPM0_C3SC |= TPM_CnSC_CHIE_MASK;// enable TPM0 ch3 interrupt
+	LastTime = CurrTime;
+	 
+}
+
+
+
+//___________________________________	
+//  turn left
+//___________________________________
+
+void TurnLeft()
+ {
+	StraightDrive=0; // stop fixing motors
+	
+	GPIOC_PCOR |= PORT_LOC(5); // start port 5	
+	GPIOC_PSOR |= PORT_LOC(6); // start port 7
+	GPIOC_PSOR |= PORT_LOC(10); // start port 5	
+	GPIOC_PSOR |= PORT_LOC(7); // start port 5	  
+	
+	PORTC_PCR3 = PORT_PCR_MUX(4); //Input Capture PTC3
+
+
+	TPM0SampleChoose=3;
+	initTPM0forEncoders();
+
+	TPM0_SC |= TPM_SC_CMOD(1); // Start counter
+	TPM0_STATUS |= 0xFFFF;
+	TPM0_C2SC |= TPM_CnSC_CHIE_MASK;// enable TPM0 ch2 interrupt RIGHT WHEEL
+
+	
+	TPM2_C1V = (0x493a/10)*4; // change speed
+	TPM1_C0V = 0; // change speed
+	LeftEncoderCounter = 600;
+	
+
+     
+  }
+ 
+
+//___________________________________	
+//  turn right
+//___________________________________
+
+void TurnRight()
+ {
+	    StraightDrive=0; // stop fixing motors
+		GPIOC_PSOR |= PORT_LOC(5); // start port 5	
+		GPIOC_PSOR |= PORT_LOC(6); // start port 7
+		GPIOC_PSOR |= PORT_LOC(10); // start port 5	
+		GPIOC_PCOR |= PORT_LOC(7); // start port 5	  	
+		
+	    PORTC_PCR4 = PORT_PCR_MUX(4); //Input Capture PTC4
+
+		TPM0SampleChoose=3;
+		
+		initTPM0forEncoders();
+
+		TPM0_SC |= TPM_SC_CMOD(1); // Start counter
+		TPM0_STATUS |= 0xFFFF;
+		TPM0_C3SC |= TPM_CnSC_CHIE_MASK;// enable TPM0 ch3 interrupt LEFT WHEEL
+		
+		TPM2_C1V = 0; // change speed
+		TPM1_C0V = (0x493a/10)*4; // change speed
+		RightEncoderCounter = 550;
+		
+	      
+  }
+
+//___________________________________	
+// Utakn right
+//___________________________________
+
+void UTank()
+ {
+	    
+		GPIOC_PSOR |= PORT_LOC(5); // start port 5	
+		GPIOC_PCOR |= PORT_LOC(6); // start port 7
+		GPIOC_PSOR |= PORT_LOC(10); // start port 5	
+		GPIOC_PCOR |= PORT_LOC(7); // start port 5	  	
+		
+	    PORTC_PCR4 = PORT_PCR_MUX(4); //Input Capture PTC4
+
+		TPM0SampleChoose=3;
+		
+		initTPM0forEncoders();
+
+		TPM0_SC |= TPM_SC_CMOD(1); // Start counter
+		TPM0_STATUS |= 0xFFFF;
+		TPM0_C3SC |= TPM_CnSC_CHIE_MASK;// enable TPM0 ch3 interrupt LEFT WHEEL
+		
+		TPM2_C1V = (0x493a/10)*3; // change speed
+		TPM1_C0V = (0x493a/10)*3; // change speed
+		RightEncoderCounter = 690;
+		
+	      
+  }
+
+//___________________________________	
+//  Uturn left
+//___________________________________
+
+void UTurnLeft()
+ {
+	LeftEncoderCounter = LeftEncoderCounter * 2;
+	TurnLeft();
+	
+  }
+ 
+void LeftFocusBlackLine(){
+
+	GPIOC_PCOR |= PORT_LOC(5); // start port 5	
+	GPIOC_PSOR |= PORT_LOC(6); // start port 7
+	GPIOC_PSOR |= PORT_LOC(10); // start port 5	
+	GPIOC_PSOR |= PORT_LOC(7); // start port 5	  
+	
+	PORTC_PCR3 = PORT_PCR_MUX(4); //Input Capture PTC3
+
+
+	TPM0SampleChoose=4;
+	
+	initTPM0forEncoders();
+
+	TPM0_SC |= TPM_SC_CMOD(1); // Start counter
+	TPM0_STATUS |= 0xFFFF;
+	TPM0_C2SC |= TPM_CnSC_CHIE_MASK;// enable TPM0 ch2 interrupt RIGHT WHEEL
+
+	
+	TPM2_C1V = (0x493a/10)*5; // change speed
+	TPM1_C0V = 0; // change speed
+	//sample3EN = 1;
+
+   
+	LeftEncoderCounter = LeftEncoderCounter * 2;
+}
+
+void RightFocusBlackLine(){
+
+	GPIOC_PSOR |= PORT_LOC(5); // start port 5	
+	GPIOC_PSOR |= PORT_LOC(6); // start port 7
+	GPIOC_PSOR |= PORT_LOC(10); // start port 5	
+	GPIOC_PCOR |= PORT_LOC(7); // start port 5	  
+	
+	PORTC_PCR4 = PORT_PCR_MUX(4); //Input Capture PTC3
+
+
+	TPM0SampleChoose=4;
+	
+	initTPM0forEncoders();
+
+	TPM0_SC |= TPM_SC_CMOD(1); // Start counter
+	TPM0_STATUS |= 0xFFFF;
+	TPM0_C3SC |= TPM_CnSC_CHIE_MASK;// enable TPM0 ch2 interrupt RIGHT WHEEL
+
+	
+	TPM2_C1V = 0; // change speed
+	TPM1_C0V = (0x493a/10)*5; // right change speed
+	//sample3EN = 1;
+
+   
+	LeftEncoderCounter = LeftEncoderCounter * 2;
+}
+//___________________________________	
+//  Uturn right
+//___________________________________
+
+void UTurnRight()
+ {
+	RightEncoderCounter = RightEncoderCounter * 2;
+	TurnRight();
+  }
+ 
+void SearchToTheRight(int leftmin,int leftmax,int rightmin,int rightmax){
+	RightStartzeroDeg();
+	Left90Deg();
+	LeftSonicMinDistance = leftmin;
+	LeftSonicMaxDistance = leftmax;
+	RightSonicMinDistance = rightmin;
+	RightSonicMaxDistance = rightmax;
+}
+
+void SearchToTheLeft(int leftmin,int leftmax,int rightmin,int rightmax){
+	LeftStartzeroDeg();
+	Right90Deg();
+	LeftSonicMinDistance = leftmin;
+	LeftSonicMaxDistance = leftmax;
+	RightSonicMinDistance = rightmin;
+	RightSonicMaxDistance = rightmax;
+}
+
+void SearchAndDriveFront(int leftmin,int leftmax,int rightmin,int rightmax){
+	LeftStartzeroDeg();
+	RightStartzeroDeg();
+	LeftSonicMinDistance = leftmin;
+	LeftSonicMaxDistance = leftmax;
+	RightSonicMinDistance = rightmin;
+	RightSonicMaxDistance = rightmax;
+
+}

@@ -1,0 +1,58 @@
+/*
+ * TFC.h
+ *
+ *  Created on: Apr 13, 2012
+ *      Author: emh203
+ */
+
+#ifndef TFC_H_
+#define TFC_H_
+
+#include <stdint.h>
+#include <stdio.h>
+#include <stdarg.h>
+#include <string.h>
+#include "Derivative.h"
+#include "BoardSupport.h"
+#include "arm_cm0.h"
+#include "GeneralFunctions.h"
+#include "UART.h"
+#include "Motor.h"
+//#include "menu.h"
+#include "ServoMotor.h"
+//#include "UARTcase.h"
+//#include "Sensors.h"
+//#include "ReflectanceSensor.h"
+//#include "battery.h"
+#include "UltraSonic.h"
+#include "Pit.h"
+#include "PTM0.h"
+#include "ColorSensors.h"
+
+extern int SampleStatus;
+extern int TPM0SampleChoose;
+extern double LeftSpeed;
+extern double RightSpeed;
+extern int RightWantedSpeed;
+extern int LeftWantedSpeed;
+extern short EncoderCheck;
+extern int LeftServocurr;
+extern int RightServocurr;
+extern int RightServoWantedDegree;
+extern int LeftServoWantedDegree;
+extern short StraightDrive;
+extern int Pit0state;
+extern int LeftEncoderCounter; // Encoder Counter for Clicks
+extern int RightEncoderCounter; // Encoder Counter for Clicks
+extern short BlacklineSearchEn;
+extern short lastfix;
+extern int NumberOfFocusOnBlackLine;
+
+extern short sample0EN;
+extern short sample1EN;
+extern short sample2EN;
+extern short sample3EN;
+extern short sample4EN;
+extern short sample5EN;
+
+#endif /* TFC_H_ */

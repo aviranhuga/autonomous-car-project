@@ -1,0 +1,108 @@
+/*
+ * TFC.h
+ *
+ *  Created on: Apr 13, 2012
+ *      Author: emh203
+ */
+
+#ifndef TFC_H_
+#define TFC_H_
+
+#include <stdint.h>
+#include <stdio.h>
+#include <stdarg.h>
+#include <string.h>
+#include "Derivative.h"
+#include "BoardSupport.h"
+#include "arm_cm0.h"
+#include "GeneralFunctions.h"
+#include "UART.h"
+#include "Motor.h"
+//#include "menu.h"
+#include "ServoMotor.h"
+//#include "UARTcase.h"
+//#include "Sensors.h"
+//#include "ReflectanceSensor.h"
+//#include "battery.h"
+#include "UltraSonic.h"
+#include "Pit.h"
+#include "PTM0.h"
+#include "ColorSensors.h"
+
+extern int SampleStatus;
+extern int TPM0SampleChoose;
+extern double LeftSpeed;
+extern double RightSpeed;
+extern int RightWantedSpeed;
+extern int LeftWantedSpeed;
+extern short EncoderCheck;
+extern int LeftServocurr;
+extern int RightServocurr;
+extern int RightServoWantedDegree;
+extern int LeftServoWantedDegree;
+extern short StraightDrive;
+extern int Pit0state;
+extern int LeftEncoderCounter; // Encoder Counter for Clicks
+extern int RightEncoderCounter; // Encoder Counter for Clicks
+extern short BlacklineSearchEn;
+extern short lastfix;
+extern int NumberOfFocusOnBlackLine;
+
+extern double LeftSonicSample;
+extern double RightSonicSample;
+extern int SampleStatus;
+extern int LeftServocurr;
+extern int RightServocurr;
+extern int Pit0state = 0;
+extern int Pit1state = 0;
+extern short BlacklineSearchEn=0;
+extern int LeftSonicMinDistance = 0;
+extern int LeftSonicMaxDistance = 0;
+extern int RightSonicMinDistance = 0;
+extern int RightSonicMaxDistance = 0;
+
+extern short WhichSide=0;
+
+//end of sample4
+extern short sample0EN = 0;
+extern short sample1EN = 0;
+extern short sample2EN = 0;
+extern short sample3EN = 0;
+extern short sample4EN = 0;
+extern short sample5EN = 0;
+extern short M11Helper=0;
+extern short M12Helper=0;
+extern short M13Helper=0;
+extern short M14Helper=0;
+extern short M15Helper=0;
+extern short lastfix;
+extern short sample3Helper = 1;
+
+
+extern int CurrX;
+extern int CurrY;
+extern int currTime;
+extern int speed;
+
+//for sample 0
+extern double LeftSpeed;
+extern double RightSpeed;
+extern short StraightDrive = 0;
+//end of sample 0
+
+//for sample1+sample2
+extern int RightServoWantedDegree;
+extern int LeftServoWantedDegree;
+//end of sample1 + sample2
+
+extern CurrTime = 0;
+extern LastTime = 0;
+
+extern short sample0EN;
+extern short sample1EN;
+extern short sample2EN;
+extern short sample3EN;
+extern short sample4EN;
+extern short sample5EN;
+
+#endif /* TFC_H_ */
